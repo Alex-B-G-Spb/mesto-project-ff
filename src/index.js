@@ -1,40 +1,37 @@
 
 import {initialCards} from './scripts/cards.js'
-import { cardCreation} from './scripts/card.js';
-import { openModal, closeModal, addListeners } from './scripts/modal.js';
+import { createCard, cardTemplate, } from './scripts/card.js';
+import { openModal, closeModal, addClosePopupListeners } from './scripts/modal.js';
 
-// @todo: Темплейт карточки
-export const cardTemplate = document.querySelector('#card-template').content;
-// @todo: DOM узлы
-export const cardList = document.querySelector(".places__list");
-export const popupEdit = document.querySelector('.popup_type_edit');
-export const popupNewCard = document.querySelector('.popup_type_new-card');
+const cardList = document.querySelector(".places__list");
+const popupEditProfile = document.querySelector('.popup_type_edit');
+const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupBigImage = document.querySelector('.popup_type_image');
-const editButton = document.querySelector(".profile__edit-button");
-const addButton = document.querySelector(".profile__add-button");
+const buttonOpenEditProfileForm = document.querySelector(".profile__edit-button");
+const buttonOpenAddCardForm = document.querySelector(".profile__add-button");
 
-const formElement = document.querySelector(".popup__form");
+const formEditProfile = document.querySelector(".popup__form");
 
 
 // @todo: Вывести карточки на страницу
 for(let i=0; i<initialCards.length; i=i+1) {
-    cardList.append(cardCreation(initialCards[i].link, initialCards[i].name));
+    cardList.append(createCard(initialCards[i].link, initialCards[i].name));
 }
 
 import './index.css';  //импорт главного файла стилей
 
-addListeners(popupEdit);
-addListeners(popupNewCard);
-addListeners(popupBigImage);
+addClosePopupListeners(popupEditProfile);
+addClosePopupListeners(popupNewCard);
+addClosePopupListeners(popupBigImage);
 
 
-editButton.addEventListener('click', function () {
-    formElement.name.value = document.querySelector(".profile__title").textContent;
-    formElement.description.value = document.querySelector(".profile__description").textContent;
-    openModal(popupEdit);
+buttonOpenEditProfileForm.addEventListener('click', function () {
+    formEditProfile.name.value = document.querySelector(".profile__title").textContent;
+    formEditProfile.description.value = document.querySelector(".profile__description").textContent;
+    openModal(popupEditProfile);
 })
 
-
+//слушатель на все карточки через родительский элемент
 cardList.addEventListener('click', function(evt) {
     if (evt.target.classList.contains('card__image')) {
         const popupImage = popupBigImage.querySelector(".popup__image");
@@ -45,18 +42,18 @@ cardList.addEventListener('click', function(evt) {
         openModal(popupBigImage);
     }});
 
-addButton.addEventListener('click', function() {
+    buttonOpenAddCardForm.addEventListener('click', function() {
     openModal(popupNewCard);
 })
 
 
 
 // Находим поля формы в DOM
-const nameInput = formElement.querySelector(".popup__input_type_name");
-const jobInput = formElement.querySelector(".popup__input_type_description");
+const nameInput = formEditProfile.querySelector(".popup__input_type_name");
+const jobInput = formEditProfile.querySelector(".popup__input_type_description");
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
-export function handleFormSubmit(evt) {
+function submitEditProfileForm(evt) {
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
                                                 // Так мы можем определить свою логику отправки.
                                                 // О том, как это делать, расскажем позже.
@@ -70,14 +67,14 @@ export function handleFormSubmit(evt) {
     // Вставьте новые значения с помощью textContent
     profileTitle.textContent = profileName;
     profileDescription.textContent = profileJob;
-    closeModal(popupEdit);
+    closeModal(popupEditProfile);
 }
 
-export const newPlaceForm = document.forms['new-place'];
+const newPlaceForm = document.forms['new-place'];
 
-export function newPlaceSubmit(evt) {
+function submitAddCardForm(evt) {
     evt.preventDefault();
-    cardList.prepend(cardCreation(newPlaceForm['link'].value, newPlaceForm['place-name'].value));
+    cardList.prepend(createCard(newPlaceForm['link'].value, newPlaceForm['place-name'].value));
     //newPlaceForm['place-name'].value="";
     //newPlaceForm['link'].value="";
     closeModal(popupNewCard);
@@ -86,5 +83,5 @@ export function newPlaceSubmit(evt) {
 
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
-formElement.addEventListener('submit', handleFormSubmit);
-newPlaceForm.addEventListener('submit', newPlaceSubmit);
+formEditProfile.addEventListener('submit', submitEditProfileForm);
+newPlaceForm.addEventListener('submit', submitAddCardForm);

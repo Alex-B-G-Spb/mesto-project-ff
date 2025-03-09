@@ -75,7 +75,7 @@ const newPlaceForm = document.forms['new-place'];
 
 function submitAddCardForm(evt) {
     evt.preventDefault();
-    cardList.prepend(createCard(newPlaceForm['link'].value, newPlaceForm['place-name'].value));
+    cardList.prepend(createCard(newPlaceForm['link'].value, newPlaceForm['place-name'].value, deleteCard, likeCard, openImagePopup));
     //newPlaceForm['place-name'].value="";
     //newPlaceForm['link'].value="";
     closeModal(popupNewCard);

@@ -1,21 +1,29 @@
 
 import {initialCards} from './scripts/cards.js'
-import { createCard, popupBigImage, } from './scripts/card.js';
+import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import { openModal, closeModal, addClosePopupListeners } from './scripts/modal.js';
 
 const cardList = document.querySelector(".places__list");
 const popupEditProfile = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
-
+const popupBigImage = document.querySelector('.popup_type_image');
 const buttonOpenEditProfileForm = document.querySelector(".profile__edit-button");
 const buttonOpenAddCardForm = document.querySelector(".profile__add-button");
 
 const formEditProfile = document.querySelector(".popup__form");
 
+export function openImagePopup(cardImage) {
+        const popupImage = popupBigImage.querySelector(".popup__image");
+        popupImage.src = cardImage.src;
+        popupImage.alt = cardImage.alt;
+        const popupCaption = popupBigImage.querySelector(".popup__caption");
+        popupCaption.textContent = cardImage.alt;
+        openModal(popupBigImage);
+    };
 
 // @todo: Вывести карточки на страницу
 for(let i=0; i<initialCards.length; i=i+1) {
-    cardList.append(createCard(initialCards[i].link, initialCards[i].name));
+    cardList.append(createCard(initialCards[i].link, initialCards[i].name, deleteCard, likeCard, openImagePopup));
 }
 
 import './index.css';  //импорт главного файла стилей

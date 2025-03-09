@@ -21,8 +21,11 @@ for(let i=0; i<initialCards.length; i=i+1) {
 import './index.css';  //импорт главного файла стилей
 
 addClosePopupListeners(popupEditProfile);
+popupEditProfile.classList.add('popup_is-animated');
 addClosePopupListeners(popupNewCard);
+popupNewCard.classList.add('popup_is-animated');
 addClosePopupListeners(popupBigImage);
+popupBigImage.classList.add('popup_is-animated');
 
 
 buttonOpenEditProfileForm.addEventListener('click', function () {

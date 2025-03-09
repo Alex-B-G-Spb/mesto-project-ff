@@ -27,7 +27,5 @@ function closeByClick (popup, className) {
 
 export function addClosePopupListeners(popup) {
     closeByClick(popup, "popup");
-    closeByClick(popup, "popup__close")
-
-    popup.classList.add('popup_is-animated');
+    closeByClick(popup, "popup__close");
 }

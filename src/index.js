@@ -1,12 +1,12 @@
 
 import {initialCards} from './scripts/cards.js'
-import { createCard, cardTemplate, } from './scripts/card.js';
+import { createCard, popupBigImage, } from './scripts/card.js';
 import { openModal, closeModal, addClosePopupListeners } from './scripts/modal.js';
 
 const cardList = document.querySelector(".places__list");
 const popupEditProfile = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
-const popupBigImage = document.querySelector('.popup_type_image');
+
 const buttonOpenEditProfileForm = document.querySelector(".profile__edit-button");
 const buttonOpenAddCardForm = document.querySelector(".profile__add-button");
 
@@ -31,21 +31,11 @@ buttonOpenEditProfileForm.addEventListener('click', function () {
     openModal(popupEditProfile);
 })
 
-//слушатель на все карточки через родительский элемент
-cardList.addEventListener('click', function(evt) {
-    if (evt.target.classList.contains('card__image')) {
-        const popupImage = popupBigImage.querySelector(".popup__image");
-        popupImage.src = evt.target.src;
-        popupImage.alt = evt.target.alt;
-        const popupCaption = popupBigImage.querySelector(".popup__caption");
-        popupCaption.textContent = evt.target.alt;
-        openModal(popupBigImage);
-    }});
 
-    buttonOpenAddCardForm.addEventListener('click', function() {
+
+buttonOpenAddCardForm.addEventListener('click', function() {
     openModal(popupNewCard);
 })
-
 
 
 // Находим поля формы в DOM

@@ -11,7 +11,9 @@ const popupBigImage = document.querySelector('.popup_type_image');
 const buttonOpenEditProfileForm = document.querySelector(".profile__edit-button");
 const buttonOpenAddCardForm = document.querySelector(".profile__add-button");
 
-const formEditProfile = document.querySelector(".edit-profile");
+const formEditProfile = document.getElementById("edit-profile");
+
+
 
 export function openImagePopup(cardImage) {
         const popupImage = popupBigImage.querySelector(".popup__image");
@@ -39,10 +41,10 @@ popupBigImage.classList.add('popup_is-animated');
 enableValidation();
 
 
-
 buttonOpenEditProfileForm.addEventListener('click', function () {
-    formEditProfile.name.value = document.querySelector(".profile__title").textContent;
-    formEditProfile.description.value = document.querySelector(".profile__description").textContent;
+    formEditProfile.querySelector(".popup__input_type_name").value = document.querySelector(".profile__title").textContent;
+    formEditProfile.querySelector(".popup__input_type_description").value = document.querySelector(".profile__description").textContent;
+    clearValidation(formEditProfile);
     openModal(popupEditProfile);
 })
 

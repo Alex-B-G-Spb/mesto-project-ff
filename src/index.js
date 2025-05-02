@@ -1,9 +1,17 @@
 
-//import {initialCards} from './scripts/cards.js'
 import { createCard, deleteCard, likeCard } from './scripts/card.js';
 import { openModal, closeModal, addClosePopupListeners } from './scripts/modal.js';
 import {enableValidation, clearValidation} from "./scripts/validation.js";
 import {getProfile, getCards, updateProfile, updateAvatar, addCard} from "./scripts/api.js"
+
+const validationConfig = {
+  formSelector: '.popup__form',
+   inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+};
 
 const cardList = document.querySelector(".places__list");
 const popupEditProfile = document.querySelector('.popup_type_edit');
@@ -21,14 +29,13 @@ const profileTitle = document.querySelector(".profile__title");
 const profileAbout = document.querySelector(".profile__description");
 const profileAvatar = document.querySelector(".profile__image");
 
-export let userId;
+let userId;
 
 const promises = [getProfile(), getCards()];
 
 Promise.all(promises)
     .then(([userData, cardData]) => {
         userId = userData._id;
-        console.log(userId)
         profileTitle.textContent = userData.name;
         profileAbout.textContent = userData.about;
         profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
@@ -74,20 +81,22 @@ addClosePopupListeners(popupNewAvatar);
 popupNewAvatar.classList.add('popup_is-animated');
 
 
-enableValidation();
+enableValidation(validationConfig);
 
 buttonOpenEditProfileForm.addEventListener('click', function () {
     formEditProfile.querySelector(".popup__input_type_name").value = document.querySelector(".profile__title").textContent;
     formEditProfile.querySelector(".popup__input_type_description").value = document.querySelector(".profile__description").textContent;
-    clearValidation(formEditProfile);
+    clearValidation(formEditProfile, validationConfig);
     openModal(popupEditProfile);
 })
 
 buttonOpenAddCardForm.addEventListener('click', function() {
+    clearValidation(popupNewCard, validationConfig);
     openModal(popupNewCard);
 })
 
 profileAvatar.addEventListener('click', function() {
+    clearValidation(popupNewAvatar, validationConfig);
     openModal(popupNewAvatar);
 })
 
@@ -105,15 +114,17 @@ function submitEditProfileForm(evt) {
     .then(() => {
       profileTitle.textContent = nameInput.value;
       profileDescription.textContent = jobInput.value;
-      evt.submitter.textContent = "Сохранить";
-
       closeModal(popupEditProfile);
     })
 
     .catch((err) => {
       evt.submitter.textContent = "Ошибка сохранения";
       console.log("Ошибка", err);
-    });
+    })
+
+    .finally(() => {
+      evt.submitter.textContent = "Сохранить";
+    })
 }
 
 function submitAddCardForm(evt) {
@@ -129,14 +140,17 @@ function submitAddCardForm(evt) {
         userId
       );
       cardList.prepend(newCard);
-      evt.submitter.textContent = "Сохранить";
-      clearValidation(newPlaceForm);
-    //cardList.prepend(createCard(newPlaceForm['link'].value, newPlaceForm['place-name'].value, deleteCard, likeCard, openImagePopup));
+      newPlaceForm['place-name'].value = "";
+      newPlaceForm['link'].value = "";
     closeModal(popupNewCard);
     })
     .catch((err) => {
+      evt.submitter.textContent = "Ошибка";
         console.log("Ошибка", err);
-      });
+      })
+      .finally(() => {
+        evt.submitter.textContent = "Сохранить";
+      })
 }
 
 function editAvatar(evt) {
@@ -148,12 +162,13 @@ function editAvatar(evt) {
     updateAvatar(avatarUrl)
       .then(() => {
         profileAvatar.style.backgroundImage = `url(${avatarUrl})`;
-        evt.submitter.textContent = "Сохранить";
-        clearValidation(formEditAvatar);
         closeModal(popupNewAvatar);
       })
       .catch((err) => {
         evt.submitter.textContent = "Ошибка обновления аватара";
         console.log("Ошибка обновления аватара", err);
-      });
+      })
+      .finally(() => {
+        evt.submitter.textContent = "Сохранить";
+      })
   }

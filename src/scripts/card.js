@@ -1,19 +1,12 @@
-import { openModal } from "./modal";
-import { openImagePopup, userId } from "..";
-import {addLike, removeLike, deleteCardFromServer} from "./api"
-export const cardTemplate = document.querySelector('#card-template').content;
 
+import {addLike, removeLike, deleteCardFromServer} from "./api"
 
 export function deleteCard (card, cardId) {
     deleteCardFromServer(cardId)
     .then((data) => {
       if (data.message === "Пост удалён") {
-        const cardElement = document.querySelector(
-          `.card[data-id="${cardId}"]`
-        );
-
-        if (cardElement) {
-          cardElement.remove();
+        if (card) {
+          card.remove();
         } else {
           console.log(`Элемент с ID ${cardId} не найден на странице`);
         }
@@ -22,18 +15,15 @@ export function deleteCard (card, cardId) {
     .catch((err) => {
       console.log("Ошибка", err);
     });
-    card.remove();
 }
 
-export function likeCard (likeButton, cardElement, cardData) {
-    const likeCounter = cardElement.querySelector(".card__like-counter");
-    const cardId = cardData._id;
+export function likeCard (likeCounter, likeButton, cardElement, cardData, userId) {
     const isLiked = cardData.likes.some(function (like) {
       return like._id === userId;
     });
   
     if (isLiked) {
-      removeLike(cardId)
+      removeLike(cardData._id)
         .then((card) => {
           likeButton.classList.remove("card__like-button_is-active");
           likeCounter.textContent = card.likes.length;
@@ -43,11 +33,10 @@ export function likeCard (likeButton, cardElement, cardData) {
           console.log("Ошибка удаления лайка", err);
         });
     } else {
-      addLike(cardId)
+      addLike(cardData._id)
         .then((card) => {
           likeButton.classList.add("card__like-button_is-active");
           likeCounter.textContent = card.likes.length;
-  
           cardData.likes = card.likes;
         })
         .catch((err) => {
@@ -57,8 +46,9 @@ export function likeCard (likeButton, cardElement, cardData) {
 }
 
 function getCardTemplate() {
-    const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-    return cardElement
+  const cardTemplate = document.querySelector('#card-template').content;
+  const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
+  return cardElement
 }
 
 export function createCard(cardData, deleteCard, likeCard, openImagePopup, userId) {
@@ -82,7 +72,10 @@ export function createCard(cardData, deleteCard, likeCard, openImagePopup, userI
         deleteButton.style.opacity = 0;
       }
 
-    likeButton.addEventListener("click", () =>  likeCard(likeButton, cardElement, cardData));
+    likeButton.addEventListener("click", () =>  likeCard(likeCounter, likeButton, cardElement, cardData, userId));
+    if (cardData.likes.some((like) => like._id===userId)) {
+      likeButton.classList.add("card__like-button_is-active");
+    }
     cardImage.addEventListener("click", () =>  openImagePopup(cardImage))
     return cardElement;
 }

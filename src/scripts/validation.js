@@ -10,10 +10,8 @@
 export function clearValidation (formElement) {
   const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
   const buttonElement = formElement.querySelector('.popup__button');
-  console.log(buttonElement); //нашел
   inputList.forEach((inputElement) => {
-    const formError = formElement.querySelector(`.${inputElement.id}-error`);
-    console.log(formError); //не нашел
+    const formError = formElement.querySelector(`#${inputElement.id}-error`);
     hideInputError(inputElement, formError);
   });
   buttonElement.disabled = false;
@@ -33,7 +31,7 @@ function hideInputError (formInput, formError) {
 }
 
 function isValid (formElement, formInput) {
-  const formError = formElement.querySelector(`.${formInput.id}-error`);
+  const formError = formElement.querySelector(`#${formInput.id}-error`);
   if (formInput.validity.patternMismatch) {
     formInput.setCustomValidity("Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
   } else {

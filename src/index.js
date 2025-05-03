@@ -86,16 +86,18 @@ enableValidation(validationConfig);
 buttonOpenEditProfileForm.addEventListener('click', function () {
     formEditProfile.querySelector(".popup__input_type_name").value = document.querySelector(".profile__title").textContent;
     formEditProfile.querySelector(".popup__input_type_description").value = document.querySelector(".profile__description").textContent;
-    clearValidation(formEditProfile, validationConfig);
+    clearValidation(popupEditProfile, validationConfig);
     openModal(popupEditProfile);
 })
 
 buttonOpenAddCardForm.addEventListener('click', function() {
+    newPlaceForm.reset();
     clearValidation(popupNewCard, validationConfig);
     openModal(popupNewCard);
 })
 
 profileAvatar.addEventListener('click', function() {
+    formEditAvatar.reset();
     clearValidation(popupNewAvatar, validationConfig);
     openModal(popupNewAvatar);
 })

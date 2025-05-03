@@ -55,7 +55,6 @@ export function createCard(cardData, deleteCard, likeCard, openImagePopup, userI
     const cardElement=getCardTemplate();
     const cardImage = cardElement.querySelector('.card__image');
     const cardTitle = cardElement.querySelector('.card__title');
-    const cardButton = cardElement.querySelector('.card__delete-button');
     const likeButton = cardElement.querySelector('.card__like-button');
     const likeCounter = cardElement.querySelector('.card__like-counter');
     const deleteButton = cardElement.querySelector('.card__delete-button');
@@ -67,7 +66,7 @@ export function createCard(cardData, deleteCard, likeCard, openImagePopup, userI
 
     if (cardData.owner._id === userId) {
         deleteButton.style.opacity = 1;
-        cardButton.addEventListener("click", () => deleteCard(cardElement, cardData._id));
+        deleteButton.addEventListener("click", () => deleteCard(cardElement, cardData._id));
       } else {
         deleteButton.style.opacity = 0;
       }

@@ -2,12 +2,10 @@
 export function clearValidation (formElement, validationConfig) {
   const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
   const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
-  inputList.forEach((inputElement) => {
-    const formError = formElement.querySelector(`#${inputElement.id}-error`);
+  inputList.forEach((inputElement) => {;
     hideInputError(inputElement, formElement, validationConfig);
   });
-  buttonElement.disabled = false;
-  buttonElement.classList.remove(validationConfig.inactiveButtonClass);
+  toggleButtonState(inputList, buttonElement, validationConfig);
 }
 
 function showInputError (formInput, formElement, errorMessage, validationConfig) {
